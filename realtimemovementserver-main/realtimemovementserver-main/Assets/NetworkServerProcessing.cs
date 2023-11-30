@@ -41,7 +41,7 @@ static public class NetworkServerProcessing
         }
     }
 
-    static void SendPlayerDataToClients(string msg)
+    public static void SendPlayerDataToClients(string msg)
     {
         foreach (var player in connectedPlayers)
         {

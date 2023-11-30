@@ -62,12 +62,15 @@ public class GameLogic : MonoBehaviour
         }
         else if (d == KbInputDirections.NoInput)
         {
-
+            
         }
 
-        NetworkServerProcessing.SendMessageToClient(ServerToClientSignifiers.VelocityAndPosition + ","
+        string msg = ServerToClientSignifiers.VelocityAndPosition + ","
             + characterVelocityInPercent.x + "," + characterVelocityInPercent.y + ","
-            + characterPositionInPercent.x + "," + characterPositionInPercent.y + ",", clientId, TransportPipeline.ReliableAndInOrder);
+            + characterPositionInPercent.x + "," + characterPositionInPercent.y;
+
+        //NetworkServerProcessing.SendMessageToClient(msg, clientId, TransportPipeline.ReliableAndInOrder);
+        NetworkServerProcessing.SendPlayerDataToClients(msg);
     }
 
 
