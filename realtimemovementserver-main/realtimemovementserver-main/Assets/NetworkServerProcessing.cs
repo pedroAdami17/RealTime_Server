@@ -27,20 +27,6 @@ static public class NetworkServerProcessing
         networkServer.SendMessageToClient(msg, clientConnectionID, pipeline);
     }
 
-    public static void PlayerData()
-    {
-        foreach (var player in connectedPlayers)
-        {
-            string msg = ServerToClientSignifiers.VelocityAndPosition + ","
-                + player.playerId + ","
-                + player.playerIdentifier + ","
-                + player.velocity.x + "," + player.velocity.y + ","
-                + player.position.x + "," + player.position.y;
-
-            SendPlayerDataToClients(msg);
-        }
-    }
-
     public static void SendPlayerDataToClients(string msg)
     {
         foreach (var player in connectedPlayers)
@@ -51,16 +37,6 @@ static public class NetworkServerProcessing
 
     #endregion
 
-    public static void Update()
-    {
-        foreach (var player in connectedPlayers)
-        {
-            player.position += (player.velocity * Time.deltaTime);
-        }
-
-        PlayerData();
-    }
-
     #region Connection Events
 
     static public void ConnectionEvent(int clientConnectionID)
@@ -70,21 +46,16 @@ static public class NetworkServerProcessing
             playerId = clientConnectionID,
             position = Vector2.zero,
             velocity = Vector2.zero,
-            playerIdentifier = CreateIdentifier()
         };
 
         connectedPlayers.Add(newPlayer);
 
-        string initialData = ServerToClientSignifiers.SpawnPlayer + "," + newPlayer.playerId + "," + newPlayer.playerIdentifier;
+        string initialData = ServerToClientSignifiers.SpawnPlayer + "," + newPlayer.playerId;
         SendMessageToClient(initialData, clientConnectionID, TransportPipeline.ReliableAndInOrder);
 
         Debug.Log("Client connection, ID == " + clientConnectionID);
     }
 
-    static int CreateIdentifier()
-    {
-        return UnityEngine.Random.Range(1, int.MaxValue);
-    }
     static public void DisconnectionEvent(int clientConnectionID)
     {
         Debug.Log("Client disconnection, ID == " + clientConnectionID);
@@ -145,7 +116,6 @@ public class PlayerInfo
     public int playerId;
     public Vector2 position;
     public Vector2 velocity;
-    public int playerIdentifier;
 }
 
 #endregion
